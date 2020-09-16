@@ -1,24 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
+  const [response, setResponse] = useState();
+
+  useEffect(() => {
+    fetch('http://localhost:8080/api/blogs')
+      .then((data) => data.json())
+      .then((data) => setResponse(data))
+      .catch(err => console.log(err))
+  }, []);
+  if(!response) return (
+    <p>Loading...</p>
+  )
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="Header">
+        <div className="Header-logo">
+          <p>WACKO BEGGAR</p>
+        </div>
+        <div className="Header-nav">
+          <a className="Header-nav__item" href="/posts">Posts</a>
+          <a className="Header-nav__item" href="/about">About</a>
+        </div>
+      </div>
+      <div className="Hero">
+        <div className="Hero-text">
+          <p>In-depth column on the Latest Sport</p>
+        </div>
+      </div>
+      <div className="Blogs-container">
+        <h2 className="Blogs-heading">Newest blogs</h2>
+        {response.blogs.map((blog) => (
+          <div key={blog.id}>
+            <p>{blog.title}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
